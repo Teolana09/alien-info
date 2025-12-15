@@ -109,9 +109,9 @@ namespace alien_parte_finale
 
             medikit--;
 
-            Console.WriteLine($"Usi un medikit e recuperi {cura} punti vita.");
-            Console.WriteLine($"Vita attuale: {vitaGiocatore}");
-            Console.WriteLine($"Medikit rimasti: {medikit}");
+            Console.WriteLine("Usi un medikit e recuperi " + cura + " punti vita.");
+            Console.WriteLine("Vita attuale: " + vitaGiocatore);
+            Console.WriteLine("Medikit rimasti:" + medikit);
 
             return (vitaGiocatore, medikit);
         }
@@ -159,7 +159,7 @@ namespace alien_parte_finale
         }
         static string Imprevisti(string imprevisti)
         {
-            SCpercorso();
+            
             Random random = new Random();
             int evento = random.Next(1, 4);
             if (evento == 1)
@@ -180,7 +180,7 @@ namespace alien_parte_finale
             }
             return imprevisti;
         }
-        static string turnoDIG(string turnoDIG, bool cacciatore, bool curatore, bool scassaP, bool armaletale, bool porteAPP)
+        static string turnoDIG(string turnoDIG, bool cacciatore, bool curatore, bool scassaP, bool armaletale, bool porteAPP, int proiettoli)
         {
             bool trovatoOggetto = false, sceltaConSuccesso = false;
             Random random = new Random();
@@ -279,6 +279,7 @@ namespace alien_parte_finale
 
             if (OggaC > 25)
             {
+                equipaggiamento(0, "", "");
                 Console.WriteLine("trovare un oggetto utile");
 
                 Random oggetto = new Random();
@@ -291,6 +292,7 @@ namespace alien_parte_finale
                 else if (oggettoTrovato == 2)
                 {
                     Console.WriteLine("hai trovato dei proiettili");
+                    proiettoli += 10;
                     armaletale = true;
                 }
                 else if (oggettoTrovato == 3)
@@ -370,20 +372,27 @@ namespace alien_parte_finale
             int risultato = dado.Next(1, 7);
             return risultato;
         }
-        static string[] SCpercorso()
-        {
-            boost(lancioDado(), 0, false);
-            int avanza = 0;
-            avanza = boost(0, 0, false);
-            lancioDado();
+        static string[] SCpercorso(bool scappato)
+        {                      
+             int avanza = boost(0, 0, false);
+            
             int passi = lancioDado();
-            string[] stanze = { "Ponte di Comando Holo-Visivo", "Camera di Navigazione Quantistica", "Sala Motori a Fusione Oscura", "Laboratorio Xenobiologico", "Modulo di Criostasi Profonda", "Orto Idroponico Bioluminescente", "Sala Olistica di Rilassamento Neurale", "Armeria a Campo Magnetico", "Centro di Comando Droni", "Archivio di Memoria Cristallina", "Sala di Teletrasporto Molecolare", "Blocco Medico Rigenerativo", "Corridoio di Gravità Variabile", "Simulatore Ambientale Totale", "Cupola Stellare Panoramica", "Sala dei Reattori Antimateria", "Centro di Comunicazione Tachionica", "Quartieri dell’Equipaggio Modulari", "Santuario del Silenzio Cosmico", "Hangar Multifase" };
+            string[] stanze = { "Ponte di Comando Holo-Visivo", "Camera di Navigazione Quantistica", "Sala Motori a Fusione Oscura", "Laboratorio Xenobiologico",
+                "Modulo di Criostasi Profonda", "Orto Idroponico Bioluminescente", "Sala Olistica di Rilassamento Neurale", "Armeria a Campo Magnetico", "Centro di Comando Droni", "Archivio di Memoria Cristallina", "Sala di Teletrasporto Molecolare",
+                "Blocco Medico Rigenerativo", "Corridoio di Gravità Variabile", "Simulatore Ambientale Totale", "Cupola Stellare Panoramica", "Sala dei Reattori Antimateria", "Centro di Comunicazione Tachionica", "Quartieri dell’Equipaggio Modulari",
+                "Santuario del Silenzio Cosmico", "Hangar Multifase" };
             string stanzaRaggiunta;
-            for (int i = 0; i < passi; i++)
+            string stanzaAttuale = stanze[0];
+            int posizioneIniziale = 0;
+            posizioneIniziale = posizioneIniziale + passi;
+            stanzaAttuale = stanze[posizioneIniziale];
+            if (stanze[posizioneIniziale] == "Hangar Multifase")
             {
-                stanze[i] = stanze[i + passi + avanza];
+                    Console.WriteLine("complimenti sei riuscito a scappare dall'alieno");
+                    scappato = true;
             }
-
+            
+            
             return stanze;
 
         }
@@ -456,8 +465,8 @@ namespace alien_parte_finale
                 equipaggiamentoattuale = equipaggiamento(3, "", sceltapersonaggio.ToString());
                 Console.WriteLine(equipaggiamentoattuale);
 
-                string[] stanzaAttuale = SCpercorso();
-                boost(0, 0, scassaP);
+                string[] stanzaAttuale = SCpercorso(scappato);
+                
                 int avanza = boost(0, 0, scassaP);
                 Console.WriteLine("tu ora ti trovi in:" + stanzaAttuale[0]);
                 int lanciodado;
@@ -479,7 +488,7 @@ namespace alien_parte_finale
                 Console.WriteLine("ora dovrai scegliere cosa fare");
                 string scelta;
 
-                scelta = turnoDIG("", cacciatore, curatore, scassaP, armaletale, porteAPP);
+                scelta = turnoDIG("", cacciatore, curatore, scassaP, armaletale, porteAPP, 0);
                 Console.WriteLine("hai scelto di: " + scelta);
 
                 int vitaAlieno = 40;
@@ -496,11 +505,28 @@ namespace alien_parte_finale
 
                 (int nuovaVita, int medikitRimasti) = UsaOggettoCura(vita, medikit);
 
+                AttaccoAlieno(ref vita);
+                Console.WriteLine("Vita giocatore dopo l'attacco alieno: " + vita);
+
                 vita = nuovaVita;
                 medikit = medikitRimasti;
+                Console.WriteLine("Vita giocatore dopo l'uso del medikit: " + vita);
+                if (vitaAlieno == 0)
+                {
+                    Console.WriteLine("Hai sconfitto l'alieno! Complimenti, sei un eroe!");
+                    alienomorto = true;
+                }
+                else if (vita == 0)
+                {
+                    Console.WriteLine("Sei stato sconfitto dall'alieno. La tua missione finisce qui.");
+                    morto = true;
 
+
+                }
 
             }
+            Console.WriteLine("Mentre la Terra appariva all'orizzonte, vide l'infezione aliena pulsare nelle sue vene e capì di essere diventato l'arma che avrebbe distrutto l'umanità. Con le lacrime agli occhi, deviò la rotta verso il Sole, scegliendo di bruciare nel silenzio eterno pur di proteggere la vita di chi lo aspettava a casa.");
+            Console.WriteLine("Grazie per aver giocato ad Alien comenant la minaccia!");
         }
     }
 }
