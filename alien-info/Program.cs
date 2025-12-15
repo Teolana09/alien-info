@@ -303,8 +303,7 @@ namespace alien_parte_finale
             else
             {
                 Console.WriteLine("non trovare nulla di utile");
-            }
-            turnoDIG = Console.ReadLine();
+            }          
             return turnoDIG;
         }
 
@@ -445,9 +444,13 @@ namespace alien_parte_finale
                 Console.WriteLine("complimenti ha scelto : Analista Taryn Wells");
                 scassaP = true;//apre le porte
             }
+            
             while (morto == false && scappato == false && alienomorto == false)
             {
+                string esitoMissione = DialogoComando();
 
+                Console.WriteLine("\nESITO FINALE:");
+                Console.WriteLine(esitoMissione);
 
                 Console.WriteLine("Ora inizia la tua avventura!");
 
@@ -485,11 +488,8 @@ namespace alien_parte_finale
                 int vitaAlieno = 40;
                 int vitaGio = 60;
 
-                string esitoMissione = DialogoComando();
 
-                Console.WriteLine("\nESITO FINALE:");
-                Console.WriteLine(esitoMissione);
-                Console.WriteLine("\nCOMBATTIMENTO FINALE CONTRO L'ALIENO:");
+                Console.WriteLine("\nCOMBATTIMENTO CONTRO L'ALIENO:");
                 vitaAlieno = AttaccoGiocatore(vitaAlieno);
                 int vita = 60;
                 int medikit = 3;
