@@ -273,39 +273,40 @@ namespace alien_parte_finale
                 {
                     Console.WriteLine("hai scelto di cercare oggetti utili");
                     sceltaConSuccesso = true;
+                    if (OggaC > 25)
+                    {
+                        equipaggiamento(0, "", "");
+                        Console.WriteLine("trovare un oggetto utile");
+
+                        Random oggetto = new Random();
+                        int oggettoTrovato = oggetto.Next(1, 4);
+                        if (oggettoTrovato == 1)
+                        {
+                            Console.WriteLine("hai trovato un medikit");
+                            curatore = true;
+                        }
+                        else if (oggettoTrovato == 2)
+                        {
+                            Console.WriteLine("hai trovato dei proiettili");
+                            proiettoli += 10;
+                            armaletale = true;
+                        }
+                        else if (oggettoTrovato == 3)
+                        {
+                            Console.WriteLine("hai trovato una chiave magnetica");
+                            scassaP = true;
+                        }
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("non trovare nulla di utile");
+                    }
                 }
             }
 
 
-            if (OggaC > 25)
-            {
-                equipaggiamento(0, "", "");
-                Console.WriteLine("trovare un oggetto utile");
-
-                Random oggetto = new Random();
-                int oggettoTrovato = oggetto.Next(1, 4);
-                if (oggettoTrovato == 1)
-                {
-                    Console.WriteLine("hai trovato un medikit");
-                    curatore = true;
-                }
-                else if (oggettoTrovato == 2)
-                {
-                    Console.WriteLine("hai trovato dei proiettili");
-                    proiettoli += 10;
-                    armaletale = true;
-                }
-                else if (oggettoTrovato == 3)
-                {
-                    Console.WriteLine("hai trovato una chiave magnetica");
-                    scassaP = true;
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("non trovare nulla di utile");
-            }          
+                     
             return turnoDIG;
         }
 
@@ -500,7 +501,7 @@ namespace alien_parte_finale
 
                 Console.WriteLine("\nCOMBATTIMENTO CONTRO L'ALIENO:");
                 vitaAlieno = AttaccoGiocatore(vitaAlieno);
-                int vita = 60;
+                int vita = vitaGiocatore;
                 int medikit = 3;
 
                 (int nuovaVita, int medikitRimasti) = UsaOggettoCura(vita, medikit);
